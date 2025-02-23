@@ -1,0 +1,6 @@
+github.com/pwiecz/go-fltk v0.0.0-20240511142305-990b442ae1ed h1:7/j/4x3KAwuJB9sWdfhi+1UFbv42TyJ4LyUI/GHS+p8=
+github.com/pwiecz/go-fltk v0.0.0-20240511142305-990b442ae1ed/go.mod h1:uMK5daOr9p+ba2BPs5QadbfaqqrHR5TGj13yWGsAsmw=
+github.com/roblillack/spot v0.3.2 h1:yqxCnkMk57Dc+o33dxh1c8ZXGx3kyMEV7GYkAP5z5OU=
+github.com/roblillack/spot v0.3.2/go.mod h1:nTQK9qWQuL977BcNBN5deI/AouFbCuBv/o4PyyXlP9I=
+github.com/shopspring/decimal v1.4.0 h1:bxl37RwXBklmTi0C79JfXCEBD1cqqHt0bbgBAGFp81k=
+github.com/shopspring/decimal v1.4.0/go.mod h1:gawqmDU56v4yIKSwfBSFip1HdCCXN8/+DMd9qYNcwME=
