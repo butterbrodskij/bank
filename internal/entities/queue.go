@@ -6,13 +6,15 @@ import (
 )
 
 type Queue struct {
+	stats    *Statistics
 	clients  []*Client
 	capacity int
 	counter  int
 }
 
-func NewQueue(capacity int) *Queue {
+func NewQueue(stats *Statistics, capacity int) *Queue {
 	return &Queue{
+		stats:    stats,
 		clients:  make([]*Client, 0, capacity),
 		capacity: capacity,
 	}
@@ -79,4 +81,11 @@ func (q *Queue) Len() int {
 		return 0
 	}
 	return len(q.clients)
+}
+
+func (q *Queue) AddWaitingTime(delta int) {
+	for _, cl := range q.clients {
+		cl.waiting += delta
+	}
+	q.stats.AddQueueStat(q.Len(), delta)
 }

@@ -26,7 +26,7 @@ func (s *Statistics) AddLostClients(lostClients int) {
 }
 
 func (s *Statistics) AddQueueStat(queue int, delta int) {
-	s.totalQueue += int64(queue)
+	s.totalQueue += int64(queue * delta)
 	s.queueCount += delta
 }
 
@@ -41,6 +41,18 @@ func (s *Statistics) AddServingStat(serving int) {
 }
 
 func (s *Statistics) String() string {
+	avgQueue := float64(0)
+	if s.queueCount > 0 {
+		avgQueue = float64(s.totalQueue) / float64(s.queueCount)
+	}
+	avgWaiting := float64(0)
+	if s.waitingCount > 0 {
+		avgWaiting = float64(s.totalWaiting) / float64(s.waitingCount)
+	}
+	avgServing := float64(0)
+	if s.servingCount > 0 {
+		avgServing = float64(s.totalServing) / float64(s.servingCount)
+	}
 	return fmt.Sprintf(`
 Statistics
 profit: %d
@@ -49,6 +61,5 @@ lost clients: %d
 avg queue length: %.2f
 avg waiting time: %.2f
 avg serving time: %.2f
-		`, s.profit, s.servingCount, s.lostClients, float64(s.totalQueue)/float64(s.queueCount),
-		float64(s.totalWaiting)/float64(s.waitingCount), float64(s.servingCount)/float64(s.servingCount))
+		`, s.profit, s.servingCount, s.lostClients, avgQueue, avgWaiting, avgServing)
 }

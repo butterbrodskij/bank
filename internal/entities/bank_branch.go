@@ -67,6 +67,7 @@ func (b *BankBranch) GetMinTimeToServe() int {
 }
 
 func (b *BankBranch) ServeClients(min int) {
+	b.Queue.AddWaitingTime(min)
 	for _, worker := range b.workers {
 		servedClient := worker.ServeClient(min)
 		if servedClient != nil {
@@ -78,8 +79,20 @@ func (b *BankBranch) ServeClients(min int) {
 	}
 }
 
+func (b *BankBranch) ServeAll() {
+	for _, worker := range b.workers {
+		servedClient := worker.ServeClient(math.MaxInt)
+		if servedClient != nil {
+			b.Table.ClientServed(servedClient.id)
+			b.stats.AddProfit(servedClient.profit)
+			b.stats.AddServingStat(servedClient.difficulty)
+			b.stats.AddWaitingStat(servedClient.waiting)
+		}
+	}
+}
+
 func (b *BankBranch) CloseShifts() {
-	b.ServeClients(math.MaxInt)
+	b.ServeAll()
 	b.ClientLost(b.Queue.EmptyQueue())
 	b.stats.AddLostClients(b.Queue.EmptyQueue())
 	b.stats.AddProfit(-len(b.workers) * internal.WorkerSalary)

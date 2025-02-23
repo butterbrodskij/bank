@@ -8,6 +8,7 @@ import (
 	"github.com/roblillack/spot"
 	"github.com/roblillack/spot/ui"
 	"os"
+	"slices"
 	"strconv"
 )
 
@@ -17,7 +18,7 @@ var (
 
 func main() {
 	stats := entities.NewStatistics()
-	queue := entities.NewQueue(internal.MinQueueCapacity)
+	queue := entities.NewQueue(stats, internal.MinQueueCapacity)
 	sch := entities.NewSchedule(internal.MinLunchDuration)
 	bank := entities.NewBankBranch(internal.MinWorkers, queue, stats)
 	flow := entities.NewApplicationFlow(bank, queue, internal.MaxApplicationInterval, internal.MinServingDuration,
@@ -37,8 +38,13 @@ func main() {
 		profitRangeRight, setProfitRangeRight := spot.UseState[int](ctx, internal.MaxProfitRange)
 		modelingStep, setModelingStep := spot.UseState[int](ctx, internal.MaxModelingStep)
 		lunchDuration, setLunchDuration := spot.UseState[int](ctx, internal.MinLunchDuration)
-		distribution, setDistribution := spot.UseState[string](ctx, internal.NormalDistribution)
+		distribution, setDistribution := spot.UseState[string](ctx, internal.UniformDistribution)
 		_, updated := spot.UseState[struct{}](ctx, struct{}{})
+
+		availableDistributions := distributions
+		if !dayOff {
+			availableDistributions = []string{distribution}
+		}
 
 		return &ui.Window{
 			Title:  "bank branch",
@@ -268,11 +274,11 @@ func main() {
 					Y:             250,
 					Width:         200,
 					Height:        20,
-					Items:         distributions,
-					SelectedIndex: 0,
+					Items:         availableDistributions,
+					SelectedIndex: slices.Index(availableDistributions, distribution),
 					Editable:      false,
 					OnSelectionDidChange: func(index int) {
-						if index < len(distributions) {
+						if dayOff && index < len(distributions) {
 							setDistribution(distributions[index])
 						}
 					},
