@@ -8,7 +8,7 @@ import (
 )
 
 func StepButton(dayOff bool, env *entities.Environment, updated func(struct{})) spot.Component {
-	if dayOff {
+	if dayOff || env != nil && env.IsOver() {
 		return nil
 	}
 

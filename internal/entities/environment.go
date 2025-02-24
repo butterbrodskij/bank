@@ -126,6 +126,10 @@ func (e *Environment) SkipDay() error {
 	return nil
 }
 
+func (e *Environment) IsOver() bool {
+	return e.timestamp.isTheEndOfSimulation()
+}
+
 func (e *Environment) GetDay() string {
 	return e.timestamp.getDayInfo()
 }

@@ -288,16 +288,7 @@ func main() {
 					setDayOff, env),
 				component.StepButton(dayOff, env, updated),
 				component.SkipDayButton(dayOff, env, updated),
-				&ui.Button{
-					X:      340,
-					Y:      280,
-					Width:  100,
-					Height: 25,
-					Title:  "Skip month",
-					OnClick: func() {
-						setDayOff(true)
-					},
-				},
+				component.SkipMonthButton(dayOff, env, updated),
 				component.Schedule(dayOff, env),
 				component.Queue(dayOff, queue),
 				component.Table(dayOff, bank),

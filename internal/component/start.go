@@ -9,6 +9,17 @@ import (
 func StartButton(dayOff bool, workers, queueCapacity, applicationInterval, servingDurationLeft, servingDurationRight,
 	profitRangeLeft, profitRangeRight, modelingStep, lunchDuration int, distribution string,
 	setDayOff func(next bool), env *entities.Environment) spot.Component {
+	if env != nil && env.IsOver() {
+		return &ui.Label{
+			X:        10,
+			Y:        280,
+			Width:    100,
+			Height:   25,
+			Value:    "Finished",
+			FontSize: 15,
+			Align:    ui.LabelAlignmentCenter,
+		}
+	}
 	if !dayOff {
 		return &ui.Label{
 			X:        10,

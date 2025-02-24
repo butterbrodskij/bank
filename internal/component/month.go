@@ -7,19 +7,21 @@ import (
 	"github.com/roblillack/spot/ui"
 )
 
-func SkipDayButton(dayOff bool, env *entities.Environment, updated func(struct{})) spot.Component {
+func SkipMonthButton(dayOff bool, env *entities.Environment, updated func(struct{})) spot.Component {
 	if dayOff || env != nil && env.IsOver() {
 		return nil
 	}
 
 	return &ui.Button{
-		X:      230,
+		X:      340,
 		Y:      280,
 		Width:  100,
 		Height: 25,
-		Title:  "Skip day",
+		Title:  "Skip month",
 		OnClick: func() {
-			err := env.SkipDay()
+			var err error
+			for err = env.SkipDay(); err == nil; err = env.SkipDay() {
+			}
 			if errors.Is(err, entities.ErrEndOfSimulation) {
 
 			} else if err != nil {
