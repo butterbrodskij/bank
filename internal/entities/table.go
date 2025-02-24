@@ -68,7 +68,7 @@ func (t *Table) String() string {
 		result += "\n-"
 		return result
 	}
-	for i := len(t.flow) - 1; i >= 0; i-- {
+	for i := len(t.flow) - 1; i >= max(0, len(t.flow)-15); i-- {
 		result += fmt.Sprintf("\n%d -> %d", t.flow[i].ClientId, t.flow[i].WorkerId)
 	}
 	return result

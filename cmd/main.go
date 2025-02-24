@@ -287,16 +287,7 @@ func main() {
 					servingDurationRight, profitRangeLeft, profitRangeRight, modelingStep, lunchDuration, distribution,
 					setDayOff, env),
 				component.StepButton(dayOff, env, updated),
-				&ui.Button{
-					X:      230,
-					Y:      280,
-					Width:  100,
-					Height: 25,
-					Title:  "Skip day",
-					OnClick: func() {
-
-					},
-				},
+				component.SkipDayButton(dayOff, env, updated),
 				&ui.Button{
 					X:      340,
 					Y:      280,

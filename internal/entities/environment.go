@@ -55,6 +55,9 @@ func (e *Environment) Update(workers, queue, applicationInterval, servingDuratio
 }
 
 func (e *Environment) Step() error {
+	if e.timestamp.isTheEndOfSimulation() {
+		return ErrEndOfSimulation
+	}
 	if e.timestamp.isTheEndOfDay() {
 		e.BankBranch.CloseShifts()
 		e.timestamp = e.timestamp.nextDay()
@@ -104,6 +107,21 @@ func (e *Environment) Step() error {
 	}
 	if difference < e.ModelingStep {
 		// update stats
+	}
+	return nil
+}
+
+func (e *Environment) SkipDay() error {
+	if e.timestamp.isTheEndOfSimulation() {
+		return ErrEndOfSimulation
+	}
+	if err := e.Step(); err != nil {
+		return err
+	}
+	for !e.timestamp.isTheEndOfDay() {
+		if err := e.Step(); err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -54,6 +54,13 @@ func (t *timestamp) isTheEndOfDay() bool {
 	}
 }
 
+func (t *timestamp) isTheEndOfSimulation() bool {
+	if t == nil {
+		return false
+	}
+	return t.day >= 28
+}
+
 func (t *timestamp) nextDay() *timestamp {
 	if t == nil {
 		return newTimestamp()

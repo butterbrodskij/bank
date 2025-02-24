@@ -14,7 +14,7 @@ func Updates(dayOff bool, bank *entities.BankBranch) spot.Component {
 		X:        700,
 		Y:        360,
 		Width:    200,
-		Height:   200,
+		Height:   600,
 		Value:    bank.GetUpdates(),
 		FontSize: 16,
 		Align:    ui.LabelAlignmentCenter,

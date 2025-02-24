@@ -12,7 +12,7 @@ func Stats(dayOff bool, stats *entities.Statistics) spot.Component {
 	}
 	return &ui.Label{
 		X:        400,
-		Y:        600,
+		Y:        700,
 		Width:    200,
 		Height:   200,
 		Value:    stats.String(),
