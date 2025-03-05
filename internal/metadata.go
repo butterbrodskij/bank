@@ -22,6 +22,10 @@ const (
 	WorkerSalary = 2
 )
 
+func GetDistributions() []string {
+	return []string{NormalDistribution, UniformDistribution}
+}
+
 func ValidateWorkers(val int) bool {
 	return val >= MinWorkers && val <= MaxWorkers
 }

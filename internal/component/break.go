@@ -1,13 +1,12 @@
 package component
 
 import (
-	"github.com/butterbrodskij/bank_branch/internal/entities"
 	"github.com/roblillack/spot"
 	"github.com/roblillack/spot/ui"
 )
 
-func BreakButton(dayOff bool, setDayOff func(next bool), env *entities.Environment, stats *entities.Statistics) spot.Component {
-	if dayOff {
+func (g *Graphics) BreakButton() spot.Component {
+	if g.dayOff {
 		return nil
 	}
 	return &ui.Button{
@@ -17,9 +16,9 @@ func BreakButton(dayOff bool, setDayOff func(next bool), env *entities.Environme
 		Height: 25,
 		Title:  "Break",
 		OnClick: func() {
-			env.Break()
-			stats.Empty()
-			setDayOff(true)
+			g.env.Break()
+			g.stats.Empty()
+			g.setDayOff(true)
 		},
 	}
 }

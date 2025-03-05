@@ -2,13 +2,12 @@ package component
 
 import (
 	"fmt"
-	"github.com/butterbrodskij/bank_branch/internal/entities"
 	"github.com/roblillack/spot"
 	"github.com/roblillack/spot/ui"
 )
 
-func Schedule(dayOff bool, env *entities.Environment) spot.Component {
-	if dayOff {
+func (g *Graphics) Schedule() spot.Component {
+	if g.dayOff {
 		return nil
 	}
 	return &ui.Label{
@@ -17,7 +16,7 @@ func Schedule(dayOff bool, env *entities.Environment) spot.Component {
 		Width:  600,
 		Height: 40,
 		Value: fmt.Sprintf("%s\t%s\nwork time: %s\tlunch time: %s",
-			env.GetDay(), env.GetTime(), env.GetWorkTime(), env.GetLunchTime()),
+			g.env.GetDay(), g.env.GetTime(), g.env.GetWorkTime(), g.env.GetLunchTime()),
 		FontSize: 16,
 		Align:    ui.LabelAlignmentCenter,
 	}

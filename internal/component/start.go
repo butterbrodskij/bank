@@ -1,15 +1,12 @@
 package component
 
 import (
-	"github.com/butterbrodskij/bank_branch/internal/entities"
 	"github.com/roblillack/spot"
 	"github.com/roblillack/spot/ui"
 )
 
-func StartButton(dayOff bool, workers, queueCapacity, applicationInterval, servingDurationLeft, servingDurationRight,
-	profitRangeLeft, profitRangeRight, modelingStep, lunchDuration int, distribution string,
-	setDayOff func(next bool), env *entities.Environment) spot.Component {
-	if env != nil && env.IsOver() {
+func (g *Graphics) StartButton() spot.Component {
+	if g.env != nil && g.env.IsOver() {
 		return &ui.Label{
 			X:        10,
 			Y:        280,
@@ -20,7 +17,7 @@ func StartButton(dayOff bool, workers, queueCapacity, applicationInterval, servi
 			Align:    ui.LabelAlignmentCenter,
 		}
 	}
-	if !dayOff {
+	if !g.dayOff {
 		return &ui.Label{
 			X:        10,
 			Y:        280,
@@ -38,12 +35,12 @@ func StartButton(dayOff bool, workers, queueCapacity, applicationInterval, servi
 		Height: 25,
 		Title:  "Start",
 		OnClick: func() {
-			_, err := env.Update(workers, queueCapacity, applicationInterval, servingDurationLeft,
-				servingDurationRight, profitRangeLeft, profitRangeRight, modelingStep, lunchDuration, distribution)
+			_, err := g.env.Update(g.workers, g.queueCapacity, g.requestInterval, g.servingDurationLeft,
+				g.servingDurationRight, g.profitRangeLeft, g.profitRangeRight, g.modelingStep, g.lunchDuration, g.distribution)
 			if err != nil {
 				panic(err)
 			}
-			setDayOff(false)
+			g.setDayOff(false)
 		},
 	}
 }

@@ -1,13 +1,12 @@
 package component
 
 import (
-	"github.com/butterbrodskij/bank_branch/internal/entities"
 	"github.com/roblillack/spot"
 	"github.com/roblillack/spot/ui"
 )
 
-func Stats(dayOff bool, stats *entities.Statistics) spot.Component {
-	if dayOff {
+func (g *Graphics) Stats() spot.Component {
+	if g.dayOff {
 		return nil
 	}
 	return &ui.Label{
@@ -15,7 +14,7 @@ func Stats(dayOff bool, stats *entities.Statistics) spot.Component {
 		Y:        700,
 		Width:    200,
 		Height:   200,
-		Value:    stats.String(),
+		Value:    g.stats.String(),
 		FontSize: 16,
 		Align:    ui.LabelAlignmentCenter,
 	}

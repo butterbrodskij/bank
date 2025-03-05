@@ -7,8 +7,8 @@ import (
 	"github.com/roblillack/spot/ui"
 )
 
-func StepButton(dayOff bool, env *entities.Environment, updated func(struct{})) spot.Component {
-	if dayOff || env != nil && env.IsOver() {
+func (g *Graphics) StepButton() spot.Component {
+	if g.dayOff || g.env != nil && g.env.IsOver() {
 		return nil
 	}
 
@@ -19,13 +19,13 @@ func StepButton(dayOff bool, env *entities.Environment, updated func(struct{})) 
 		Height: 25,
 		Title:  "Step",
 		OnClick: func() {
-			err := env.Step()
+			err := g.env.Step()
 			if errors.Is(err, entities.ErrEndOfSimulation) {
 
 			} else if err != nil {
 				panic(err)
 			}
-			updated(struct{}{})
+			g.updated(struct{}{})
 		},
 	}
 }
