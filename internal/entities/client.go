@@ -1,7 +1,7 @@
 package entities
 
 type Client struct {
-	*Application
+	*Request
 	id      int
 	waiting int
 	toServe int

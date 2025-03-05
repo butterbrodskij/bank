@@ -39,16 +39,16 @@ func (q *Queue) EmptyQueue() int {
 	return l
 }
 
-func (q *Queue) AddClient(app *Application) int {
+func (q *Queue) AddClient(app *Request) int {
 	if q == nil || q.capacity <= len(q.clients) {
 		return 0
 	}
 	q.counter++
 	q.clients = append(q.clients, &Client{
-		Application: app,
-		id:          q.counter,
-		waiting:     0,
-		toServe:     app.difficulty,
+		Request: app,
+		id:      q.counter,
+		waiting: 0,
+		toServe: app.difficulty,
 	})
 	return q.counter
 }

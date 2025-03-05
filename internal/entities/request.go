@@ -1,13 +1,13 @@
 package entities
 
-type Application struct {
+type Request struct {
 	created    *timestamp
 	difficulty int
 	profit     int
 }
 
-func NewApplication(t *timestamp, difficulty int, profit int) *Application {
-	return &Application{
+func NewRequest(t *timestamp, difficulty int, profit int) *Request {
+	return &Request{
 		created:    t,
 		difficulty: difficulty,
 		profit:     profit,

@@ -21,9 +21,9 @@ func main() {
 	queue := entities.NewQueue(stats, internal.MinQueueCapacity)
 	sch := entities.NewSchedule(internal.MinLunchDuration)
 	bank := entities.NewBankBranch(internal.MinWorkers, queue, stats)
-	flow := entities.NewApplicationFlow(bank, queue, internal.MaxApplicationInterval, internal.MinServingDuration,
+	generator := entities.NewRequestGenerator(bank, queue, internal.MaxRequestInterval, internal.MinServingDuration,
 		internal.MaxServingDuration, internal.MinProfitRange, internal.MaxProfitRange, internal.NormalDistribution)
-	env := entities.NewEnvironment(bank, flow, sch)
+	env := entities.NewEnvironment(bank, generator, sch)
 
 	ui.Init()
 
@@ -31,7 +31,7 @@ func main() {
 		dayOff, setDayOff := spot.UseState[bool](ctx, true)
 		workers, setWorkers := spot.UseState[int](ctx, internal.MinWorkers)
 		queueCapacity, setQueueCapacity := spot.UseState[int](ctx, internal.MinQueueCapacity)
-		applicationInterval, setApplicationInterval := spot.UseState[int](ctx, internal.MaxApplicationInterval)
+		requestInterval, setRequestInterval := spot.UseState[int](ctx, internal.MaxRequestInterval)
 		servingDurationLeft, setServingDurationLeft := spot.UseState[int](ctx, internal.MinServingDuration)
 		servingDurationRight, setServingDurationRight := spot.UseState[int](ctx, internal.MaxServingDuration)
 		profitRangeLeft, setProfitRangeLeft := spot.UseState[int](ctx, internal.MinProfitRange)
@@ -111,12 +111,12 @@ func main() {
 					Y:        100,
 					Width:    30,
 					Height:   20,
-					Text:     fmt.Sprint(applicationInterval),
+					Text:     fmt.Sprint(requestInterval),
 					FontSize: 16,
 					OnChange: func(content string) {
 						newApplicationInterval, err := strconv.Atoi(content)
-						if err == nil && internal.ValidateApplicationInterval(newApplicationInterval) && dayOff {
-							setApplicationInterval(newApplicationInterval)
+						if err == nil && internal.ValidateRequestInterval(newApplicationInterval) && dayOff {
+							setRequestInterval(newApplicationInterval)
 						}
 					},
 				},
@@ -125,7 +125,7 @@ func main() {
 					Y:        100,
 					Width:    400,
 					Height:   20,
-					Value:    fmt.Sprintf("max application interval (1..10), current value: %d", applicationInterval),
+					Value:    fmt.Sprintf("max request interval (1..10), current value: %d", requestInterval),
 					FontSize: 16,
 					Align:    ui.LabelAlignmentLeft,
 				},
@@ -276,14 +276,14 @@ func main() {
 					Height:        20,
 					Items:         availableDistributions,
 					SelectedIndex: slices.Index(availableDistributions, distribution),
-					Editable:      false,
+					Editable:      true,
 					OnSelectionDidChange: func(index int) {
 						if dayOff && index < len(distributions) {
-							setDistribution(distributions[index])
+							setDistribution(availableDistributions[index])
 						}
 					},
 				},
-				component.StartButton(dayOff, workers, queueCapacity, applicationInterval, servingDurationLeft,
+				component.StartButton(dayOff, workers, queueCapacity, requestInterval, servingDurationLeft,
 					servingDurationRight, profitRangeLeft, profitRangeRight, modelingStep, lunchDuration, distribution,
 					setDayOff, env),
 				component.StepButton(dayOff, env, updated),
@@ -292,8 +292,10 @@ func main() {
 				component.Schedule(dayOff, env),
 				component.Queue(dayOff, queue),
 				component.Table(dayOff, bank),
+				component.Flow(dayOff, bank),
 				component.Updates(dayOff, bank),
 				component.Stats(dayOff, stats),
+				component.BreakButton(dayOff, setDayOff, env, stats),
 				&ui.Button{
 					X:      410,
 					Y:      950,

@@ -7,7 +7,7 @@ import (
 
 type Environment struct {
 	*BankBranch
-	*ApplicationFlow
+	*RequestGenerator
 	*Schedule
 	WorkersCount        int
 	QueueCapacity       int
@@ -20,12 +20,12 @@ type Environment struct {
 	*timestamp
 }
 
-func NewEnvironment(bank *BankBranch, flow *ApplicationFlow, sch *Schedule) *Environment {
+func NewEnvironment(bank *BankBranch, flow *RequestGenerator, sch *Schedule) *Environment {
 	return &Environment{
-		BankBranch:      bank,
-		ApplicationFlow: flow,
-		Schedule:        sch,
-		timestamp:       newTimestamp(),
+		BankBranch:       bank,
+		RequestGenerator: flow,
+		Schedule:         sch,
+		timestamp:        newTimestamp(),
 	}
 }
 
@@ -37,7 +37,7 @@ func (e *Environment) Update(workers, queue, applicationInterval, servingDuratio
 	if _, err := e.Schedule.Update(lunchDuration); err != nil {
 		return nil, err
 	}
-	if _, err := e.ApplicationFlow.Update(applicationInterval, servingDurationLeft, servingDurationRight,
+	if _, err := e.RequestGenerator.Update(applicationInterval, servingDurationLeft, servingDurationRight,
 		profitRangeLeft, profitRangeRight, distribution); err != nil {
 		return nil, err
 	}
@@ -51,6 +51,7 @@ func (e *Environment) Update(workers, queue, applicationInterval, servingDuratio
 	e.Profit = internal.NewRange(profitRangeLeft, profitRangeRight)
 	e.ModelingStep = modelingStep
 	e.Distribution = distribution
+	e.timestamp = newTimestamp()
 	return e, nil
 }
 
@@ -74,19 +75,19 @@ func (e *Environment) Step() error {
 			}
 		}
 
-		nextApp := e.ApplicationFlow.NextApp
+		nextApp := e.RequestGenerator.NextApp
 		minToServe := e.BankBranch.GetMinTimeToServe()
 
 		if i < nextApp && i < minToServe {
-			e.ApplicationFlow.NextApp -= i
+			e.RequestGenerator.NextApp -= i
 			e.BankBranch.ServeClients(i)
 			break
 		} else if nextApp < minToServe {
-			e.ApplicationFlow.GenerateApplication(t.addMinutes(nextApp))
+			e.RequestGenerator.GenerateApplication(t.addMinutes(nextApp))
 			e.BankBranch.ServeClients(nextApp)
 		} else if minToServe < nextApp {
 			e.BankBranch.ServeClients(minToServe)
-			e.ApplicationFlow.NextApp -= minToServe
+			e.RequestGenerator.NextApp -= minToServe
 		} else {
 			e.BankBranch.ServeClients(minToServe)
 			for e.BankBranch.HasFreeWorker() && e.Queue.Len() > 0 {
@@ -95,7 +96,7 @@ func (e *Environment) Step() error {
 					break
 				}
 			}
-			e.ApplicationFlow.GenerateApplication(t.addMinutes(nextApp))
+			e.RequestGenerator.GenerateApplication(t.addMinutes(nextApp))
 		}
 		for e.BankBranch.HasFreeWorker() && e.Queue.Len() > 0 {
 			clientToServe := e.Queue.PopClient()
@@ -124,6 +125,11 @@ func (e *Environment) SkipDay() error {
 		}
 	}
 	return nil
+}
+
+func (e *Environment) Break() {
+	e.BankBranch.CloseShifts()
+	e.timestamp = newTimestamp()
 }
 
 func (e *Environment) IsOver() bool {

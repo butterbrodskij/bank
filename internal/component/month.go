@@ -17,7 +17,7 @@ func SkipMonthButton(dayOff bool, env *entities.Environment, updated func(struct
 		Y:      280,
 		Width:  100,
 		Height: 25,
-		Title:  "Skip month",
+		Title:  "Skip to the end",
 		OnClick: func() {
 			var err error
 			for err = env.SkipDay(); err == nil; err = env.SkipDay() {

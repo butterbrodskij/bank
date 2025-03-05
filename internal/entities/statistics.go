@@ -11,10 +11,18 @@ type Statistics struct {
 	queueCount   int
 	waitingCount int
 	servingCount int
+	maxWaiting   int
 }
 
 func NewStatistics() *Statistics {
 	return &Statistics{}
+}
+
+func (s *Statistics) Empty() {
+	if s == nil {
+		return
+	}
+	*s = Statistics{}
 }
 
 func (s *Statistics) AddProfit(profit int) {
@@ -31,6 +39,7 @@ func (s *Statistics) AddQueueStat(queue int, delta int) {
 }
 
 func (s *Statistics) AddWaitingStat(waiting int) {
+	s.maxWaiting = max(waiting, s.maxWaiting)
 	s.totalWaiting += int64(waiting)
 	s.waitingCount++
 }
@@ -60,6 +69,7 @@ served clients: %d
 lost clients: %d
 avg queue length: %.2f
 avg waiting time: %.2f
+max waiting time: %d
 avg serving time: %.2f
-		`, s.profit, s.servingCount, s.lostClients, avgQueue, avgWaiting, avgServing)
+		`, s.profit, s.servingCount, s.lostClients, avgQueue, avgWaiting, s.maxWaiting, avgServing)
 }

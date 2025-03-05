@@ -11,7 +11,7 @@ func Updates(dayOff bool, bank *entities.BankBranch) spot.Component {
 		return nil
 	}
 	return &ui.Label{
-		X:        700,
+		X:        800,
 		Y:        360,
 		Width:    200,
 		Height:   600,

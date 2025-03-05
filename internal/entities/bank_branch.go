@@ -71,7 +71,7 @@ func (b *BankBranch) ServeClients(min int) {
 	for _, worker := range b.workers {
 		servedClient := worker.ServeClient(min)
 		if servedClient != nil {
-			b.Table.ClientServed(servedClient.id)
+			b.Table.ClientServed(worker, servedClient.id)
 			b.stats.AddProfit(servedClient.profit)
 			b.stats.AddServingStat(servedClient.difficulty)
 			b.stats.AddWaitingStat(servedClient.waiting)
@@ -83,7 +83,7 @@ func (b *BankBranch) ServeAll() {
 	for _, worker := range b.workers {
 		servedClient := worker.ServeClient(math.MaxInt)
 		if servedClient != nil {
-			b.Table.ClientServed(servedClient.id)
+			b.Table.ClientServed(worker, servedClient.id)
 			b.stats.AddProfit(servedClient.profit)
 			b.stats.AddServingStat(servedClient.difficulty)
 			b.stats.AddWaitingStat(servedClient.waiting)
@@ -98,8 +98,14 @@ func (b *BankBranch) CloseShifts() {
 	b.stats.AddProfit(-len(b.workers) * internal.WorkerSalary)
 }
 
-func (b *BankBranch) GetChanges() string {
-	changes := b.Table.String()
+func (b *BankBranch) GetInfo() string {
+	changes := b.Table.StringInfo()
+	b.Table.ClearInfo()
+	return changes
+}
+
+func (b *BankBranch) GetFlow() string {
+	changes := b.Table.StringFlow()
 	b.Table.ClearFlow()
 	return changes
 }

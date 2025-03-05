@@ -1,20 +1,20 @@
 package internal
 
 const (
-	MinWorkers             = 2
-	MaxWorkers             = 7
-	MinQueueCapacity       = 10
-	MaxQueueCapacity       = 25
-	MinApplicationInterval = 1
-	MaxApplicationInterval = 10
-	MinServingDuration     = 2
-	MaxServingDuration     = 30
-	MinProfitRange         = 3
-	MaxProfitRange         = 50
-	MinModelingStep        = 10
-	MaxModelingStep        = 60
-	MinLunchDuration       = 0
-	MaxLunchDuration       = 60
+	MinWorkers         = 2
+	MaxWorkers         = 7
+	MinQueueCapacity   = 10
+	MaxQueueCapacity   = 25
+	MinRequestInterval = 1
+	MaxRequestInterval = 10
+	MinServingDuration = 2
+	MaxServingDuration = 30
+	MinProfitRange     = 3
+	MaxProfitRange     = 50
+	MinModelingStep    = 10
+	MaxModelingStep    = 60
+	MinLunchDuration   = 0
+	MaxLunchDuration   = 60
 
 	NormalDistribution  = "normal distribution"
 	UniformDistribution = "uniform distribution"
@@ -30,8 +30,8 @@ func ValidateQueueCapacity(val int) bool {
 	return val >= MinQueueCapacity && val <= MaxQueueCapacity
 }
 
-func ValidateApplicationInterval(val int) bool {
-	return val >= MinApplicationInterval && val <= MaxApplicationInterval
+func ValidateRequestInterval(val int) bool {
+	return val >= MinRequestInterval && val <= MaxRequestInterval
 }
 
 func ValidateServingDuration(left, right int) bool {

@@ -12,7 +12,7 @@ func Queue(dayOff bool, q *entities.Queue) spot.Component {
 		return nil
 	}
 	return &ui.Label{
-		X:        100,
+		X:        50,
 		Y:        360,
 		Width:    200,
 		Height:   internal.MaxQueueCapacity * 40,
