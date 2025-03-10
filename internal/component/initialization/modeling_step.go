@@ -15,12 +15,16 @@ func ModelingStepInitialization(modelingStep int, setModelingStep func(next int)
 			Y:        190,
 			Width:    30,
 			Height:   20,
-			Text:     fmt.Sprint(modelingStep),
+			Text:     internal.StringValue(modelingStep),
 			FontSize: 16,
 			OnChange: func(content string) {
 				newModelingStep, err := strconv.Atoi(content)
-				if err == nil && internal.ValidateModelingStep(newModelingStep) && dayOff {
-					setModelingStep(newModelingStep)
+				if dayOff {
+					if err == nil && internal.ValidateModelingStep(newModelingStep) {
+						setModelingStep(newModelingStep)
+					} else {
+						setModelingStep(internal.InvalidValue)
+					}
 				}
 			},
 		},
@@ -29,7 +33,7 @@ func ModelingStepInitialization(modelingStep int, setModelingStep func(next int)
 			Y:        190,
 			Width:    400,
 			Height:   20,
-			Value:    fmt.Sprintf("modeling step (10..60), current value: %d", modelingStep),
+			Value:    fmt.Sprintf("modeling step (10..60), current value: %s", internal.StringValue(modelingStep)),
 			FontSize: 16,
 			Align:    ui.LabelAlignmentLeft,
 		},

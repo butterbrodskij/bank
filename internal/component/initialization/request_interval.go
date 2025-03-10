@@ -15,7 +15,7 @@ func RequestIntervalInitialization(requestInterval int, setRequestInterval func(
 			Y:        100,
 			Width:    400,
 			Height:   20,
-			Value:    fmt.Sprintf("max request interval (1..10), current value: %d", requestInterval),
+			Value:    fmt.Sprintf("max request interval (1..10), current value: %s", internal.StringValue(requestInterval)),
 			FontSize: 16,
 			Align:    ui.LabelAlignmentLeft,
 		},
@@ -24,12 +24,16 @@ func RequestIntervalInitialization(requestInterval int, setRequestInterval func(
 			Y:        100,
 			Width:    30,
 			Height:   20,
-			Text:     fmt.Sprint(requestInterval),
+			Text:     internal.StringValue(requestInterval),
 			FontSize: 16,
 			OnChange: func(content string) {
 				newApplicationInterval, err := strconv.Atoi(content)
-				if err == nil && internal.ValidateRequestInterval(newApplicationInterval) && dayOff {
-					setRequestInterval(newApplicationInterval)
+				if dayOff {
+					if err == nil && internal.ValidateRequestInterval(newApplicationInterval) {
+						setRequestInterval(newApplicationInterval)
+					} else {
+						setRequestInterval(internal.InvalidValue)
+					}
 				}
 			},
 		},

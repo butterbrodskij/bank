@@ -1,6 +1,12 @@
 package internal
 
+import (
+	"math"
+	"strconv"
+)
+
 const (
+	InvalidValue       = math.MinInt
 	MinWorkers         = 2
 	MaxWorkers         = 7
 	MinQueueCapacity   = 10
@@ -54,4 +60,11 @@ func ValidateModelingStep(val int) bool {
 
 func ValidateLunchDuration(val int) bool {
 	return val >= MinLunchDuration && val <= MaxLunchDuration
+}
+
+func StringValue(val int) string {
+	if val != InvalidValue {
+		return strconv.Itoa(val)
+	}
+	return ""
 }

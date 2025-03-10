@@ -15,12 +15,16 @@ func LunchDurationInitialization(lunchDuration int, setLunchDuration func(next i
 			Y:        220,
 			Width:    30,
 			Height:   20,
-			Text:     fmt.Sprint(lunchDuration),
+			Text:     internal.StringValue(lunchDuration),
 			FontSize: 16,
 			OnChange: func(content string) {
 				newLunchDuration, err := strconv.Atoi(content)
-				if err == nil && internal.ValidateLunchDuration(newLunchDuration) && dayOff {
-					setLunchDuration(newLunchDuration)
+				if dayOff {
+					if err == nil && internal.ValidateLunchDuration(newLunchDuration) {
+						setLunchDuration(newLunchDuration)
+					} else {
+						setLunchDuration(internal.InvalidValue)
+					}
 				}
 			},
 		},
@@ -29,7 +33,7 @@ func LunchDurationInitialization(lunchDuration int, setLunchDuration func(next i
 			Y:        220,
 			Width:    400,
 			Height:   20,
-			Value:    fmt.Sprintf("lunch duration (0..60), current value: %d", lunchDuration),
+			Value:    fmt.Sprintf("lunch duration (0..60), current value: %s", internal.StringValue(lunchDuration)),
 			FontSize: 16,
 			Align:    ui.LabelAlignmentLeft,
 		},

@@ -10,4 +10,4 @@ GUI Golang application for bank branch operation modeling
 
 ## Project scheme
 
-![img.png](img.png)
+![img_1.png](img_1.png)

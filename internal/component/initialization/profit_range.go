@@ -16,12 +16,16 @@ func ProfitRangeInitialization(profitRangeLeft, profitRangeRight int,
 			Y:        160,
 			Width:    30,
 			Height:   20,
-			Text:     fmt.Sprint(profitRangeLeft),
+			Text:     internal.StringValue(profitRangeLeft),
 			FontSize: 16,
 			OnChange: func(content string) {
 				newProfitRangeLeft, err := strconv.Atoi(content)
-				if err == nil && internal.ValidateProfitRange(newProfitRangeLeft, profitRangeRight) && dayOff {
-					setProfitRangeLeft(newProfitRangeLeft)
+				if dayOff {
+					if err == nil && internal.ValidateProfitRange(newProfitRangeLeft, profitRangeRight) {
+						setProfitRangeLeft(newProfitRangeLeft)
+					} else {
+						setProfitRangeLeft(internal.InvalidValue)
+					}
 				}
 			},
 		},
@@ -39,12 +43,16 @@ func ProfitRangeInitialization(profitRangeLeft, profitRangeRight int,
 			Y:        160,
 			Width:    30,
 			Height:   20,
-			Text:     fmt.Sprint(profitRangeRight),
+			Text:     internal.StringValue(profitRangeRight),
 			FontSize: 16,
 			OnChange: func(content string) {
 				newProfitRangeRight, err := strconv.Atoi(content)
-				if err == nil && internal.ValidateProfitRange(profitRangeLeft, newProfitRangeRight) && dayOff {
-					setProfitRangeRight(newProfitRangeRight)
+				if dayOff {
+					if err == nil && internal.ValidateProfitRange(profitRangeLeft, newProfitRangeRight) {
+						setProfitRangeRight(newProfitRangeRight)
+					} else {
+						setProfitRangeRight(internal.InvalidValue)
+					}
 				}
 			},
 		},
@@ -53,8 +61,8 @@ func ProfitRangeInitialization(profitRangeLeft, profitRangeRight int,
 			Y:      160,
 			Width:  400,
 			Height: 20,
-			Value: fmt.Sprintf("profit range (3..50-3..50), current value: %d-%d",
-				profitRangeLeft, profitRangeRight),
+			Value: fmt.Sprintf("profit range (3..50-3..50), current value: %s-%s",
+				internal.StringValue(profitRangeLeft), internal.StringValue(profitRangeRight)),
 			FontSize: 16,
 			Align:    ui.LabelAlignmentLeft,
 		},

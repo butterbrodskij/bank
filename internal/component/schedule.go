@@ -7,8 +7,30 @@ import (
 )
 
 func (g *Graphics) Schedule() spot.Component {
+	if g.errMessage != "" {
+		return &ui.Label{
+			X:        200,
+			Y:        310,
+			Width:    600,
+			Height:   40,
+			Value:    fmt.Sprintf("can not start simulation: %s", g.errMessage),
+			FontSize: 16,
+			Align:    ui.LabelAlignmentCenter,
+		}
+	}
 	if g.dayOff {
 		return nil
+	}
+	if g.env.IsOver() {
+		return &ui.Label{
+			X:        200,
+			Y:        310,
+			Width:    600,
+			Height:   40,
+			Value:    "Simulation Finished\n",
+			FontSize: 16,
+			Align:    ui.LabelAlignmentCenter,
+		}
 	}
 	return &ui.Label{
 		X:      200,

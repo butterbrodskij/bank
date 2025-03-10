@@ -120,6 +120,7 @@ func (e *Environment) SkipDay() error {
 		return err
 	}
 	for !e.timestamp.isTheEndOfDay() {
+		e.Table.Clear()
 		if err := e.Step(); err != nil {
 			return err
 		}
@@ -129,6 +130,7 @@ func (e *Environment) SkipDay() error {
 
 func (e *Environment) Break() {
 	e.BankBranch.CloseShifts()
+	e.Table.Clear()
 	e.timestamp = newTimestamp()
 }
 

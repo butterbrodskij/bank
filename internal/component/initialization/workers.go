@@ -15,7 +15,7 @@ func WorkersInitialization(workers int, setWorkers func(next int), dayOff bool) 
 			Y:        40,
 			Width:    400,
 			Height:   20,
-			Value:    fmt.Sprintf("workers (2..7), current value: %d", workers),
+			Value:    fmt.Sprintf("workers (2..7), current value: %s", internal.StringValue(workers)),
 			FontSize: 16,
 			Align:    ui.LabelAlignmentLeft,
 		},
@@ -24,12 +24,16 @@ func WorkersInitialization(workers int, setWorkers func(next int), dayOff bool) 
 			Y:        40,
 			Width:    30,
 			Height:   20,
-			Text:     fmt.Sprint(workers),
+			Text:     internal.StringValue(workers),
 			FontSize: 16,
 			OnChange: func(content string) {
 				newWorkers, err := strconv.Atoi(content)
-				if err == nil && internal.ValidateWorkers(newWorkers) && dayOff {
-					setWorkers(newWorkers)
+				if dayOff {
+					if err == nil && internal.ValidateWorkers(newWorkers) {
+						setWorkers(newWorkers)
+					} else {
+						setWorkers(internal.InvalidValue)
+					}
 				}
 			},
 		},

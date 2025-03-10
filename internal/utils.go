@@ -26,6 +26,9 @@ func RandValue(r *Range, distribution string) int {
 	if r == nil {
 		return 0
 	}
+	if r.Right == r.Left {
+		return r.Right
+	}
 	switch distribution {
 	case NormalDistribution:
 		prop := decimal.NewFromFloat(math.MaxFloat64).Add(decimal.NewFromFloat(math.MaxFloat64)).Div(

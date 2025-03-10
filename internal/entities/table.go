@@ -34,6 +34,12 @@ func NewTable() *Table {
 	}
 }
 
+func (t *Table) Clear() {
+	t.ClearUpdates()
+	t.ClearFlow()
+	t.ClearInfo()
+}
+
 func (t *Table) ClearFlow() {
 	t.flow = nil
 }

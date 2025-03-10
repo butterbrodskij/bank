@@ -34,6 +34,9 @@ type Graphics struct {
 	setDistribution         func(next string)
 	distributions           []string
 	updated                 func(struct{})
+
+	errMessage    string
+	setErrMessage func(next string)
 }
 
 func NewGraphics(env *entities.Environment, stats *entities.Statistics) *Graphics {
@@ -58,6 +61,7 @@ func (g *Graphics) UpdateState(ctx *spot.RenderContext) *Graphics {
 	g.modelingStep, g.setModelingStep = spot.UseState[int](ctx, internal.MaxModelingStep)
 	g.lunchDuration, g.setLunchDuration = spot.UseState[int](ctx, internal.MinLunchDuration)
 	g.distribution, g.setDistribution = spot.UseState[string](ctx, internal.UniformDistribution)
+	g.errMessage, g.setErrMessage = spot.UseState[string](ctx, "")
 	if !g.dayOff {
 		g.distributions = []string{g.distribution}
 	} else {

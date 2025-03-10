@@ -15,7 +15,7 @@ func QueueCapacityInitialization(queueCapacity int, setQueueCapacity func(next i
 			Y:        70,
 			Width:    400,
 			Height:   20,
-			Value:    fmt.Sprintf("queue capacity (10..25), current value: %d", queueCapacity),
+			Value:    fmt.Sprintf("queue capacity (10..25), current value: %s", internal.StringValue(queueCapacity)),
 			FontSize: 16,
 			Align:    ui.LabelAlignmentLeft,
 		},
@@ -24,12 +24,16 @@ func QueueCapacityInitialization(queueCapacity int, setQueueCapacity func(next i
 			Y:        70,
 			Width:    30,
 			Height:   20,
-			Text:     fmt.Sprint(queueCapacity),
+			Text:     internal.StringValue(queueCapacity),
 			FontSize: 16,
 			OnChange: func(content string) {
 				newQueueCapacity, err := strconv.Atoi(content)
-				if err == nil && internal.ValidateQueueCapacity(newQueueCapacity) && dayOff {
-					setQueueCapacity(newQueueCapacity)
+				if dayOff {
+					if err == nil && internal.ValidateQueueCapacity(newQueueCapacity) {
+						setQueueCapacity(newQueueCapacity)
+					} else {
+						setQueueCapacity(internal.InvalidValue)
+					}
 				}
 			},
 		},
